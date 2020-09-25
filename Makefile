@@ -1,7 +1,7 @@
 install: install-deps
 
 run:
-	bin/gendiff
+	bin/gendiff.js
 
 install-deps:
 	npm ci
