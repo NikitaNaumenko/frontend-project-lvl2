@@ -1,7 +1,7 @@
 install: install-deps
 
 run:
-	bin/gendiff.js
+	bin/gendiff.js __fixtures__/first_file.json __fixtures__/second_file.json
 
 install-deps:
 	npm ci
