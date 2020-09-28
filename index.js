@@ -62,9 +62,9 @@ const genDiff = (filepath1, filepath2) => {
   const secondFileContent = fs.readFileSync(secondFilePath, 'utf8');
   const data1 = JSON.parse(firstFileContent);
   const data2 = JSON.parse(secondFileContent);
-  const ast = buildAST(data1, data2)
+  const ast = buildAST(data1, data2);
 
-  return renderAST(ast)
-}
+  return renderAST(ast);
+};
 
 export default genDiff;
