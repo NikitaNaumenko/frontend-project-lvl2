@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
+import findParser from './src/parsers';
 
 const types = [
   {
@@ -60,8 +61,11 @@ const genDiff = (filepath1, filepath2) => {
 
   const firstFileContent = fs.readFileSync(firstFilePath, 'utf8');
   const secondFileContent = fs.readFileSync(secondFilePath, 'utf8');
-  const data1 = JSON.parse(firstFileContent);
-  const data2 = JSON.parse(secondFileContent);
+  const extension = path.extname(firstFilePath);
+
+  const parseContent = findParser(extension);
+  const data1 = parseContent(firstFileContent);
+  const data2 = parseContent(secondFileContent);
   const ast = buildAST(data1, data2);
 
   return renderAST(ast);
