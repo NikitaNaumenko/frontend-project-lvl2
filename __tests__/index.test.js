@@ -24,3 +24,9 @@ test('generate flat yaml diff', () => {
   const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'second.yaml');
   expect(genDiff(filepath1, filepath2)).toEqual(result);
 });
+
+test('generate flat yaml diff', () => {
+  const filepath1 = path.resolve(__dirname, '..', '__fixtures__', 'first.ini');
+  const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'second.ini');
+  expect(genDiff(filepath1, filepath2)).toEqual(result);
+});
