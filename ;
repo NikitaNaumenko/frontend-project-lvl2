@@ -1,0 +1,43 @@
+import _ from 'lodash';
+
+const identation = '  '
+const tab = deepLevel => identation.repeat(deepLevel);
+
+
+  const valueByType = {
+    changed: ({ key, valueBefore, valueAfter }) => (`  - ${key}: ${valueBefore}\n  + ${key}: ${valueAfter}`),
+    unchanged: ({ key, valueBefore }) => (`    ${key}: ${valueBefore}`),
+    added: ({ key, valueAfter }) => (`  + ${key}: ${valueAfter}`),
+    deleted: ({ key, valueBefore }) => (`  - ${key}: ${valueBefore}`),
+    nest: ({ children }, func) => children.map((child) => func(child)).join('\n')
+  };
+const stringify = (object, deepLevel) => {}
+
+const valueToString = (value, deepLevel) => (
+  _.isObject(value) ? stringify(value, deepLevel + 1) : value
+);
+const typeForRender = {
+  nest: ,
+  changed: ,
+  unchanged: ,
+  added ,
+  deleted ,
+}
+
+
+const render = (ast) => {
+  // const processedAST = ast.reduce((acc, node) => {
+  //   const valueFunc = valueByType[node.type];
+  //   const value = valueFunc(node, render);
+  //   return [...acc, value];
+  // }, []);
+
+  // return `{\n${processedAST.join('\n')}\n}`;
+  const iter = (tree, deepLevel) => {
+
+  };
+
+  return iter(ast, 0)
+};
+
+export default render;

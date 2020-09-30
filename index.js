@@ -1,39 +1,26 @@
 import path from 'path';
 import fs from 'fs';
-import findParser from './src/parsers';
+import parse from './src/parse';
 import buildAST from './src/buildAST';
+import render from './src/formatters';
+// import util from 'util';
 
-const renderAST = (ast) => {
-  const valueByType = {
-    changed: ({ key, valueBefore, valueAfter }) => (`  - ${key}: ${valueBefore}\n  + ${key}: ${valueAfter}`),
-    unchanged: ({ key, valueBefore }) => (`    ${key}: ${valueBefore}`),
-    added: ({ key, valueAfter }) => (`  + ${key}: ${valueAfter}`),
-    deleted: ({ key, valueBefore }) => (`  - ${key}: ${valueBefore}`),
-  };
+const resolvePath = (filepath) => path.resolve(filepath);
+const readFile = (filepath) => fs.readFileSync(filepath, 'utf8');
 
-  const processedAST = ast.reduce((acc, node) => {
-    const valueFunc = valueByType[node.type];
-    const value = valueFunc(node);
-    return [...acc, value];
-  }, []);
+const genDiff = (filepath1, filepath2, format) => {
+  const firstFilePath = resolvePath(filepath1);
+  const secondFilePath = resolvePath(filepath2);
+  const firstFileContent = readFile(firstFilePath);
+  const secondFileContent = readFile(secondFilePath);
 
-  return `{\n${processedAST.join('\n')}\n}`;
-};
-
-const genDiff = (filepath1, filepath2) => {
-  const firstFilePath = path.resolve(filepath1);
-  const secondFilePath = path.resolve(filepath2);
-
-  const firstFileContent = fs.readFileSync(firstFilePath, 'utf8');
-  const secondFileContent = fs.readFileSync(secondFilePath, 'utf8');
-  const extension = path.extname(firstFilePath);
-
-  const parseContent = findParser(extension);
-  const data1 = parseContent(firstFileContent);
-  const data2 = parseContent(secondFileContent);
+  const data1 = parse(firstFileContent, firstFilePath);
+  const data2 = parse(secondFileContent, secondFilePath);
   const ast = buildAST(data1, data2);
 
-  return renderAST(ast);
+  // console.log(util.inspect(ast,  false, null, true))
+
+  return render(ast, format);
 };
 
 export default genDiff;

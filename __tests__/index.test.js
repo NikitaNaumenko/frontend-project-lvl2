@@ -30,3 +30,13 @@ test('generate flat ini diff', () => {
   const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'second.ini');
   expect(genDiff(filepath1, filepath2)).toEqual(result);
 });
+
+test('generate nest diff', () => {
+  const filepath1 = path.resolve(__dirname, '..', '__fixtures__', 'nestedFirst.json');
+  const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'nestedSecond.json');
+
+  const nestResultPath = path.resolve(__dirname, '..', '__fixtures__', 'nestedResult');
+  const nestResult = fs.readFileSync(nestResultPath, 'utf8');
+
+  expect(genDiff(filepath1, filepath2)).toEqual(nestResult);
+});
