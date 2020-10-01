@@ -1,5 +1,12 @@
 import stylish from './stylish';
 
-const render = (ast, format) => stylish(ast);
+const funcByFormats = {
+  stylish,
+};
+
+const render = (ast, format) => {
+  const func = funcByFormats[format];
+  return func(ast);
+};
 
 export default render;

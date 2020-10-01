@@ -8,7 +8,7 @@ import render from './src/formatters';
 const resolvePath = (filepath) => path.resolve(filepath);
 const readFile = (filepath) => fs.readFileSync(filepath, 'utf8');
 
-const genDiff = (filepath1, filepath2, format) => {
+const genDiff = (filepath1, filepath2, format = 'stylish') => {
   const firstFilePath = resolvePath(filepath1);
   const secondFilePath = resolvePath(filepath2);
   const firstFileContent = readFile(firstFilePath);
