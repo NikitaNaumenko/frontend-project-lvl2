@@ -16,7 +16,7 @@ const readFile = (filepath) => fs.readFileSync(filepath, 'utf8');
 test.each([
   ['json', 'stylish'], ['yaml', 'stylish'], ['ini', 'stylish'],
   ['json', 'plain'], ['yaml', 'plain'], ['ini', 'plain'],
-  // ['json', 'json'], ['yaml', 'json'], ['ini', 'json']
+  ['json', 'json'], ['yaml', 'json'], ['ini', 'json'],
 ])(
   '%s', (type, format) => {
     const before = resolvePath(`before.${type}`);
