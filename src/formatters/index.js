@@ -1,7 +1,9 @@
 import stylish from './stylish';
+import plain from './plain';
 
 const funcByFormats = {
   stylish,
+  plain,
 };
 
 const render = (ast, format) => {

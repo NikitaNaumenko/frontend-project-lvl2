@@ -10,33 +10,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 /* eslint-enable no-underscore-dangle */
 
-const resultPath = path.resolve(__dirname, '..', '__fixtures__', 'result');
-const result = fs.readFileSync(resultPath, 'utf8');
+const resolvePath = (filename) => path.resolve(__dirname, '..', '__fixtures__', filename);
+const readFile = (filepath) => fs.readFileSync(filepath, 'utf8');
 
-test('generate flat json diff', () => {
-  const filepath1 = path.resolve(__dirname, '..', '__fixtures__', 'first.json');
-  const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'second.json');
-  expect(genDiff(filepath1, filepath2)).toEqual(result);
-});
-
-test('generate flat yaml diff', () => {
-  const filepath1 = path.resolve(__dirname, '..', '__fixtures__', 'first.yaml');
-  const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'second.yaml');
-  expect(genDiff(filepath1, filepath2)).toEqual(result);
-});
-
-test('generate flat ini diff', () => {
-  const filepath1 = path.resolve(__dirname, '..', '__fixtures__', 'first.ini');
-  const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'second.ini');
-  expect(genDiff(filepath1, filepath2)).toEqual(result);
-});
-
-test('generate nest diff', () => {
-  const filepath1 = path.resolve(__dirname, '..', '__fixtures__', 'nestedFirst.json');
-  const filepath2 = path.resolve(__dirname, '..', '__fixtures__', 'nestedSecond.json');
-
-  const nestResultPath = path.resolve(__dirname, '..', '__fixtures__', 'nestedResult');
-  const nestResult = fs.readFileSync(nestResultPath, 'utf8');
-
-  expect(genDiff(filepath1, filepath2)).toEqual(nestResult);
-});
+test.each([
+  ['json', 'stylish'], ['yaml', 'stylish'], ['ini', 'stylish'],
+  ['json', 'plain'], ['yaml', 'plain'], ['ini', 'plain'],
+  // ['json', 'json'], ['yaml', 'json'], ['ini', 'json']
+])(
+  '%s', (type, format) => {
+    const before = resolvePath(`before.${type}`);
+    const after = resolvePath(`after.${type}`);
+    const actual = genDiff(before, after, format);
+    const expected = readFile(resolvePath(format), 'utf-8');
+    expect(actual).toEqual(expected);
+  },
+);
