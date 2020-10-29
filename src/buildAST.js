@@ -39,7 +39,7 @@ const types = [
 ];
 
 const buildAST = (data1, data2) => {
-  const keys = _.union(Object.keys(data1), Object.keys(data2));
+  const keys = _.union(Object.keys(data1), Object.keys(data2)).sort();
 
   return keys.reduce((acc, key) => {
     const { process } = types.find(({ check }) => check(key, data1, data2));
@@ -47,4 +47,4 @@ const buildAST = (data1, data2) => {
   }, []);
 };
 
-export default buildAST;
+export default (data1, data2) => ({ type: 'root', children: buildAST(data1, data2) });

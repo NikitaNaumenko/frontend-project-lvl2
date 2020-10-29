@@ -33,6 +33,10 @@ const nodeTypesForRender = {
 };
 
 const render = (ast, level = 1) => {
+  if (ast.type === 'root') {
+    return render(ast.children);
+  }
+
   const result = ast.flatMap((node) => {
     const { type } = node;
     const renderNodeFunc = nodeTypesForRender[type];

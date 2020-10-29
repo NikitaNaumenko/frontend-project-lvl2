@@ -14,15 +14,33 @@ const resolvePath = (filename) => path.resolve(__dirname, '..', '__fixtures__', 
 const readFile = (filepath) => fs.readFileSync(filepath, 'utf8');
 
 test.each([
-  ['json', 'stylish'], ['yaml', 'stylish'], ['ini', 'stylish'],
-  ['json', 'plain'], ['yaml', 'plain'], ['ini', 'plain'],
-  ['json', 'json'], ['yaml', 'json'], ['ini', 'json'],
+  ['json', 'stylish'], ['yml', 'stylish'], ['ini', 'stylish'],
+  ['json', 'plain'], ['yml', 'plain'], ['ini', 'plain'],
+  ['json', 'json'], ['yml', 'json'], ['ini', 'json'],
 ])(
-  '%s', (type, format) => {
-    const before = resolvePath(`before.${type}`);
-    const after = resolvePath(`after.${type}`);
+  '%s %s', (type, format) => {
+    const before = resolvePath(`file1.${type}`);
+    const after = resolvePath(`file2.${type}`);
     const actual = genDiff(before, after, format);
-    const expected = readFile(resolvePath(format), 'utf-8');
+    const expected = readFile(resolvePath(`result_${format}.txt`), 'utf-8');
     expect(actual).toEqual(expected);
+  },
+);
+
+test.each(['json', 'yml', 'ini'])(
+  '%s default stylish', (type) => {
+    const before = resolvePath(`file1.${type}`);
+    const after = resolvePath(`file2.${type}`);
+    const actual = genDiff(before, after);
+    const expected = readFile(resolvePath('result_stylish.txt'), 'utf-8');
+    expect(actual).toEqual(expected);
+  },
+);
+
+test.each([['json', 'wrongFormat'], ['yml', 'wrongFormat'], ['ini', 'wrongFormat']])(
+  '%s %s', (type, format) => {
+    const before = resolvePath(`file1.${type}`);
+    const after = resolvePath(`file2.${type}`);
+    expect(() => genDiff(before, after, format)).toThrow(/Wrong format/);
   },
 );

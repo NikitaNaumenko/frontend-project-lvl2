@@ -1,5 +1,5 @@
 const valuesByType = {
-  object: () => '[complex value]',
+  object: (value) => (value ? '[complex value]' : null),
   string: (value) => `'${value}'`,
   number: (value) => value,
   boolean: (value) => value,
@@ -13,17 +13,21 @@ const getValue = (value) => {
 
 const nodeTypesForRender = {
   nest: ({ key, children }, path, func) => func(children, `${path}${key}.`),
-  deleted: ({ key }, path) => `Property ${path}${key} was removed`,
+  deleted: ({ key }, path) => `Property '${path}${key}' was removed`,
   added: ({ key, valueAfter }, path) => (
-    `Property ${path}${key} was added with value ${getValue(valueAfter)}`
+    `Property '${path}${key}' was added with value: ${getValue(valueAfter)}`
   ),
   changed: ({ key, valueBefore, valueAfter }, path) => (
-    `Property ${path}${key} was updated. From ${getValue(valueBefore)} to ${getValue(valueAfter)}`
+    `Property '${path}${key}' was updated. From ${getValue(valueBefore)} to ${getValue(valueAfter)}`
   ),
   unchanged: () => null,
 };
 
 const render = (ast, path = '') => {
+  if (ast.type === 'root') {
+    return render(ast.children);
+  }
+
   const result = ast.flatMap((node) => {
     const { type } = node;
     const renderNodeFunc = nodeTypesForRender[type];
